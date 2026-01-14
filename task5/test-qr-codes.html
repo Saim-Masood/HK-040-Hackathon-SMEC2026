@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test QR Codes - Friend Connect</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .card h2 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 24px;
+        }
+        .card p {
+            margin: 0 0 20px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .qr-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 0 auto;
+        }
+        canvas {
+            display: block !important;
+            margin: 0 auto;
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            border: 3px solid #667eea;
+        }
+        .instructions {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .instructions ol {
+            text-align: left;
+            color: #333;
+            line-height: 1.8;
+        }
+        .instructions code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔗 Test QR Codes</h1>
+    <p class="subtitle">Scan these QR codes with your Friend Connect app to test the scanner</p>
+    
+    <div class="instructions">
+        <h3>📱 How to Test:</h3>
+        <ol>
+            <li>Open your Friend Connect app at <code>http://localhost:5173</code></li>
+            <li>Navigate to the <strong>Scan</strong> page</li>
+            <li>Allow camera access when prompted</li>
+            <li>Point your phone camera at any QR code below</li>
+            <li>The app should automatically scan and add the friend!</li>
+        </ol>
+        <p style="margin: 10px 0 0 0; color: #666; font-size: 14px;">
+            💡 <strong>Tip:</strong> You can also open this page on another device and scan from there.
+        </p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <img class="avatar" src="https://api.dicebear.com/9.x/avataaars/svg?seed=alice" alt="Alice">
+            <h2>Alice Smith</h2>
+            <p>Software Engineer</p>
+            <div class="qr-container">
+                <canvas id="qr1"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="avatar" src="https://api.dicebear.com/9.x/avataaars/svg?seed=bob" alt="Bob">
+            <h2>Bob Johnson</h2>
+            <p>Product Designer</p>
+            <div class="qr-container">
+                <canvas id="qr2"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="avatar" src="https://api.dicebear.com/9.x/avataaars/svg?seed=charlie" alt="Charlie">
+            <h2>Charlie Brown</h2>
+            <p>Data Scientist</p>
+            <div class="qr-container">
+                <canvas id="qr3"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="avatar" src="https://api.dicebear.com/9.x/avataaars/svg?seed=diana" alt="Diana">
+            <h2>Diana Prince</h2>
+            <p>Marketing Manager</p>
+            <div class="qr-container">
+                <canvas id="qr4"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="avatar" src="https://api.dicebear.com/9.x/avataaars/svg?seed=ethan" alt="Ethan">
+            <h2>Ethan Hunt</h2>
+            <p>DevOps Engineer</p>
+            <div class="qr-container">
+                <canvas id="qr5"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="avatar" src="https://api.dicebear.com/9.x/avataaars/svg?seed=fiona" alt="Fiona">
+            <h2>Fiona Green</h2>
+            <p>UX Researcher</p>
+            <div class="qr-container">
+                <canvas id="qr6"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const users = [
+            {
+                id: "test-user-alice-001",
+                name: "Alice Smith",
+                avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=alice"
+            },
+            {
+                id: "test-user-bob-002",
+                name: "Bob Johnson",
+                avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=bob"
+            },
+            {
+                id: "test-user-charlie-003",
+                name: "Charlie Brown",
+                avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=charlie"
+            },
+            {
+                id: "test-user-diana-004",
+                name: "Diana Prince",
+                avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=diana"
+            },
+            {
+                id: "test-user-ethan-005",
+                name: "Ethan Hunt",
+                avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=ethan"
+            },
+            {
+                id: "test-user-fiona-006",
+                name: "Fiona Green",
+                avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=fiona"
+            }
+        ];
+
+        users.forEach((user, index) => {
+            QRCode.toCanvas(
+                document.getElementById(`qr${index + 1}`),
+                JSON.stringify(user),
+                {
+                    width: 200,
+                    margin: 2,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                },
+                function (error) {
+                    if (error) console.error(error);
+                }
+            );
+        });
+    </script>
+</body>
+</html>
